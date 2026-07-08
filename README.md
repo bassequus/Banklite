@@ -234,15 +234,23 @@ This project is useful for internship and interview discussions because it demon
 - Deployment using Vercel for frontend and Render/Railway for backend.
 - Unit and integration testing.
 
-## Screenshots to add
-
-Replace this section with actual project screenshots before pushing to GitHub:
+## Screenshots:
 
 - Login page
+  
+
 - Customer dashboard
+  <img width="1920" height="1017" alt="customer dashboard" src="https://github.com/user-attachments/assets/6fd483fd-190e-4721-b592-d71f5e832806" />
+
 - Loan application form
+  <img width="1920" height="1005" alt="loan application page" src="https://github.com/user-attachments/assets/412f1b9c-8d29-4830-aae9-45ed0f3ac6a4" />
+
 - Officer dashboard with risk chart
+  <img width="1920" height="1016" alt="officer dashboard" src="https://github.com/user-attachments/assets/aa7f9541-3e55-4626-b814-596c048d2c73" />
+
 - Underwriting console
+  <img width="1920" height="1021" alt="underwriting console page" src="https://github.com/user-attachments/assets/3f310dce-e325-4e65-a4af-f73e0b1c8b64" />
+
 
 ## Conclusion
 
