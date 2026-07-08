@@ -1,0 +1,5 @@
+DB_NAME = "banklite_db"
+DB_USER = "postgres"
+DB_PASSWORD = "ras@031102"
+DB_HOST = "localhost"
+DB_PORT = "5432"
