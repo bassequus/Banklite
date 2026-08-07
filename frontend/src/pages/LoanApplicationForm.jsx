@@ -5,9 +5,18 @@ function LoanApplicationForm() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    amount: "",
-    purpose: "",
-    monthly_income: ""
+    gender: "",
+    married: "",
+    dependents: "",
+    education: "",
+    self_employed: "",
+    applicant_income: "",
+    coapplicant_income: "",
+    loan_amount: "",
+    loan_amount_term: "",
+    credit_history: "",
+    property_area: "",
+    purpose: ""
   });
 
   const [error, setError] = useState("");
@@ -31,13 +40,58 @@ function LoanApplicationForm() {
     setError("");
     setSuccess("");
 
-    if (!formData.amount || Number(formData.amount) <= 0) {
+    if (!formData.gender) {
+      setError("Please select gender");
+      return;
+    }
+
+    if (!formData.married) {
+      setError("Please select marital status");
+      return;
+    }
+
+    if (!formData.dependents) {
+      setError("Please select dependents");
+      return;
+    }
+
+    if (!formData.education) {
+      setError("Please select education");
+      return;
+    }
+
+    if (!formData.self_employed) {
+      setError("Please select self employment status");
+      return;
+    }
+
+    if (!formData.applicant_income || Number(formData.applicant_income) <= 0) {
+      setError("Please enter a valid applicant income");
+      return;
+    }
+
+    if (formData.coapplicant_income === "" || Number(formData.coapplicant_income) < 0) {
+      setError("Please enter a valid coapplicant income");
+      return;
+    }
+
+    if (!formData.loan_amount || Number(formData.loan_amount) <= 0) {
       setError("Please enter a valid loan amount");
       return;
     }
 
-    if (!formData.monthly_income || Number(formData.monthly_income) <= 0) {
-      setError("Please enter a valid monthly income");
+    if (!formData.loan_amount_term || Number(formData.loan_amount_term) <= 0) {
+      setError("Please enter a valid loan amount term");
+      return;
+    }
+
+    if (formData.credit_history === "") {
+      setError("Please select credit history");
+      return;
+    }
+
+    if (!formData.property_area) {
+      setError("Please select property area");
       return;
     }
 
@@ -54,12 +108,21 @@ function LoanApplicationForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          amount: Number(formData.amount),
-          purpose: formData.purpose,
-          monthly_income: Number(formData.monthly_income)
+          gender: formData.gender,
+          married: formData.married,
+          dependents: formData.dependents,
+          education: formData.education,
+          self_employed: formData.self_employed,
+          applicant_income: Number(formData.applicant_income),
+          coapplicant_income: Number(formData.coapplicant_income),
+          loan_amount: Number(formData.loan_amount),
+          loan_amount_term: Number(formData.loan_amount_term),
+          credit_history: Number(formData.credit_history),
+          property_area: formData.property_area,
+          purpose: formData.purpose
         })
       });
 
@@ -74,9 +137,18 @@ function LoanApplicationForm() {
       setSuccess("Loan application submitted successfully");
 
       setFormData({
-        amount: "",
-        purpose: "",
-        monthly_income: ""
+        gender: "",
+        married: "",
+        dependents: "",
+        education: "",
+        self_employed: "",
+        applicant_income: "",
+        coapplicant_income: "",
+        loan_amount: "",
+        loan_amount_term: "",
+        credit_history: "",
+        property_area: "",
+        purpose: ""
       });
 
       setTimeout(() => {
@@ -120,13 +192,90 @@ function LoanApplicationForm() {
 
           <form onSubmit={handleSubmit} className="form-grid two-col">
             <div className="form-group">
-              <label htmlFor="amount">Loan Amount</label>
+              <label htmlFor="gender">Gender</label>
+              <select
+                id="gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="married">Married</label>
+              <select
+                id="married"
+                name="married"
+                value={formData.married}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select marital status</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dependents">Dependents</label>
+              <select
+                id="dependents"
+                name="dependents"
+                value={formData.dependents}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select dependents</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3+">3+</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="education">Education</label>
+              <select
+                id="education"
+                name="education"
+                value={formData.education}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select education</option>
+                <option value="Graduate">Graduate</option>
+                <option value="Not Graduate">Not Graduate</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="self_employed">Self Employed</label>
+              <select
+                id="self_employed"
+                name="self_employed"
+                value={formData.self_employed}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="applicant_income">Applicant Income</label>
               <input
-                id="amount"
+                id="applicant_income"
                 type="number"
-                name="amount"
-                placeholder="Enter requested amount"
-                value={formData.amount}
+                name="applicant_income"
+                placeholder="Enter applicant income"
+                value={formData.applicant_income}
                 onChange={handleChange}
                 min="1"
                 required
@@ -134,17 +283,76 @@ function LoanApplicationForm() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="monthly_income">Monthly Income</label>
+              <label htmlFor="coapplicant_income">Coapplicant Income</label>
               <input
-                id="monthly_income"
+                id="coapplicant_income"
                 type="number"
-                name="monthly_income"
-                placeholder="Enter monthly income"
-                value={formData.monthly_income}
+                name="coapplicant_income"
+                placeholder="Enter coapplicant income"
+                value={formData.coapplicant_income}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="loan_amount">Loan Amount</label>
+              <input
+                id="loan_amount"
+                type="number"
+                name="loan_amount"
+                placeholder="Enter requested loan amount"
+                value={formData.loan_amount}
                 onChange={handleChange}
                 min="1"
                 required
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="loan_amount_term">Loan Amount Term</label>
+              <input
+                id="loan_amount_term"
+                type="number"
+                name="loan_amount_term"
+                placeholder="Enter loan term"
+                value={formData.loan_amount_term}
+                onChange={handleChange}
+                min="1"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="credit_history">Credit History</label>
+              <select
+                id="credit_history"
+                name="credit_history"
+                value={formData.credit_history}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select credit history</option>
+                <option value="1">Good (1)</option>
+                <option value="0">Bad (0)</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="property_area">Property Area</label>
+              <select
+                id="property_area"
+                name="property_area"
+                value={formData.property_area}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select property area</option>
+                <option value="Urban">Urban</option>
+                <option value="Semiurban">Semiurban</option>
+                <option value="Rural">Rural</option>
+              </select>
             </div>
 
             <div className="form-group" style={{ gridColumn: "1 / -1" }}>
@@ -196,14 +404,14 @@ function LoanApplicationForm() {
             </div>
 
             <div className="info-item">
-              <span className="info-label">Review Type</span>
-              <span className="info-value">Manual underwriting</span>
+              <span className="info-label">Model Input</span>
+              <span className="info-value">Dataset aligned</span>
             </div>
           </div>
 
           <div className="section-space">
             <p className="helper-text">
-              Make sure the amount and income values are accurate before submitting the request.
+              Make sure income, loan amount, credit history, and applicant details are accurate before submitting the request.
             </p>
           </div>
         </div>

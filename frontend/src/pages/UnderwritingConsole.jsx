@@ -26,7 +26,7 @@ function UnderwritingConsole() {
       const response = await fetch("http://127.0.0.1:5000/api/v1/loans/pending", {
         method: "GET",
         headers: {
-          Authorization: token
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -71,7 +71,7 @@ function UnderwritingConsole() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           action: actionType,
@@ -105,16 +105,16 @@ function UnderwritingConsole() {
   };
 
   const getCreditCategory = (score) => {
-    if (score >= 800) {
+    if (score >= 80) {
       return <span className="badge badge-excellent">Excellent</span>;
     }
-    if (score >= 740) {
+    if (score >= 70) {
       return <span className="badge badge-verygood">Very Good</span>;
     }
-    if (score >= 670) {
+    if (score >= 60) {
       return <span className="badge badge-good">Good</span>;
     }
-    if (score >= 580) {
+    if (score >= 50) {
       return <span className="badge badge-fair">Fair</span>;
     }
     return <span className="badge badge-poor">Poor</span>;
@@ -274,27 +274,27 @@ function UnderwritingConsole() {
           <div className="info-list">
             <div className="info-item">
               <span className="info-label">Excellent</span>
-              <span className="info-value">800 to 850</span>
+              <span className="info-value">80 to 100</span>
             </div>
 
             <div className="info-item">
               <span className="info-label">Very Good</span>
-              <span className="info-value">740 to 799</span>
+              <span className="info-value">70 to 79</span>
             </div>
 
             <div className="info-item">
               <span className="info-label">Good</span>
-              <span className="info-value">670 to 739</span>
+              <span className="info-value">60 to 69</span>
             </div>
 
             <div className="info-item">
               <span className="info-label">Fair</span>
-              <span className="info-value">580 to 669</span>
+              <span className="info-value">50 to 59</span>
             </div>
 
             <div className="info-item">
               <span className="info-label">Poor</span>
-              <span className="info-value">300 to 579</span>
+              <span className="info-value">0 to 49</span>
             </div>
 
             <div className="info-item">

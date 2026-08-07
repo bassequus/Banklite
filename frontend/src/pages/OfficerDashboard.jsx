@@ -29,7 +29,7 @@ function OfficerDashboard() {
       const response = await fetch("http://127.0.0.1:5000/api/v1/loans/pending", {
         method: "GET",
         headers: {
-          Authorization: token
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -55,16 +55,16 @@ function OfficerDashboard() {
   };
 
   const getCreditCategory = (score) => {
-    if (score >= 800) {
+    if (score >= 80) {
       return { label: "Excellent", className: "badge badge-excellent" };
     }
-    if (score >= 740) {
+    if (score >= 70) {
       return { label: "Very Good", className: "badge badge-verygood" };
     }
-    if (score >= 670) {
+    if (score >= 60) {
       return { label: "Good", className: "badge badge-good" };
     }
-    if (score >= 580) {
+    if (score >= 50) {
       return { label: "Fair", className: "badge badge-fair" };
     }
     return { label: "Poor", className: "badge badge-poor" };
@@ -73,24 +73,25 @@ function OfficerDashboard() {
   const creditChartData = [
     {
       name: "Excellent",
-      value: pendingLoans.filter((loan) => loan.credit_score >= 800).length
+      value: pendingLoans.filter((loan) => loan.credit_score >= 80).length
     },
     {
       name: "Very Good",
       value: pendingLoans.filter(
-        (loan) => loan.credit_score >= 740 && loan.credit_score < 800
+        (loan) => loan.credit_score >= 70 && loan.credit_score < 80
       ).length
+      
     },
     {
       name: "Good",
       value: pendingLoans.filter(
-        (loan) => loan.credit_score >= 670 && loan.credit_score < 740
+        (loan) => loan.credit_score >= 60 && loan.credit_score < 70
       ).length
     },
     {
       name: "Fair",
       value: pendingLoans.filter(
-        (loan) => loan.credit_score >= 580 && loan.credit_score < 670
+        (loan) => loan.credit_score >= 50 && loan.credit_score < 60
       ).length
     },
     {
@@ -144,9 +145,7 @@ function OfficerDashboard() {
         <div className="stat-card">
           <p className="stat-label">Excellent + Very Good</p>
           <p className="stat-value">
-            {
-              pendingLoans.filter((loan) => loan.credit_score >= 740).length
-            }
+            {pendingLoans.filter((loan) => loan.credit_score >= 740).length}
           </p>
         </div>
       </div>
@@ -223,12 +222,21 @@ function OfficerDashboard() {
                             </span>
                           </td>
                           <td>
-                            <button
-                              className="btn-primary"
-                              onClick={() => navigate(`/underwrite/${loan.id}`)}
-                            >
-                              Review
-                            </button>
+                            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                              <button
+                                className="btn-primary"
+                                onClick={() => navigate(`/underwrite/${loan.id}`)}
+                              >
+                                Review
+                              </button>
+
+                              <button
+                                className="btn-secondary"
+                                onClick={() => navigate(`/ai-review/${loan.id}`)}
+                              >
+                                AI Review
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
