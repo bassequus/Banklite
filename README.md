@@ -1,164 +1,126 @@
 # BankLite – Smart Loan Origination System
 
-BankLite is a role-based full-stack web application that simulates a commercial banking Loan Origination System (LOS). It covers customer onboarding into the loan process, automated mock credit scoring, officer-side underwriting, audit logging, and status tracking through a React frontend and Flask backend.
+BankLite is a role-based full-stack loan workflow demo built with React on the frontend and Flask on the backend. The current implementation supports customer login, loan application submission, automated credit scoring, officer review, mandatory underwriting comments, and AI-assisted review for pending applications.
 
-## Project overview
+## What the app does today
 
-The application models a simplified consumer lending workflow in five review stages:
+The current workflow follows these steps:
 
-1. **Authentication and identity access** – users sign in as either customer or credit officer.
-2. **Application capture** – customers submit a loan request with amount, purpose, and monthly income.
-3. **Automated credit review** – the backend generates a mock credit score for initial risk classification.
-4. **Manual underwriting decision** – credit officers review pending applications and approve or reject them with comments.
-5. **Audit and decision traceability** – every underwriting action is stored in audit logs for review and accountability.
+1. A user logs in through the React frontend.
+2. The backend validates credentials and returns a session token.
+3. A customer submits a loan application with applicant, financial, and property details.
+4. The backend calculates a credit score and stores the application as pending.
+5. A credit officer reviews pending applications from the officer dashboard.
+6. The officer can approve or reject the application after entering comments.
+7. The officer can also generate an AI review for the selected loan application.
 
-This structure mirrors the practical separation between borrower actions, system-side risk processing, and manual credit control in retail or commercial lending workflows.
+## Current features
 
-## Core features
+### Customer flow
+- Login with role-based routing to the customer dashboard.
+- View personal loan applications and their status.
+- Submit a new loan application through the application form.
+- Track application progress as pending, approved, or rejected.
 
-### Customer features
-- Secure login flow with role-based routing.
-- Loan application form for amount, purpose, and monthly income.
-- Personal dashboard showing submitted applications.
-- Real-time viewing of loan status: pending, approved, or rejected.
-- Logout support and protected page access.
+### Officer flow
+- Access a protected officer dashboard.
+- View pending applications in a queue.
+- See a credit score distribution chart for pending loans.
+- Open an underwriting console for a selected application.
+- Approve or reject applications only after entering comments.
+- Generate an AI review for a loan application.
 
-### Credit officer features
-- Officer dashboard with a global queue of pending applications.
-- Recharts PieChart visualization for pending loan risk distribution.
-- Underwriting console for manual decision-making.
-- Mandatory officer comments before approval or rejection.
-- Logout support and protected routes.
-
-### System features
-- Role-based access control using stored session tokens.
-- REST API integration between React frontend and Flask backend.
-- Mock credit score generation in the backend.
-- Audit log creation for underwriting actions.
-- Responsive professional dashboard-style interface.
-
-## Five-stage credit review flow
-
-| Stage | Description | Primary Actor | Output |
-|------|-------------|---------------|--------|
-| 1 | Login and access validation | Customer / Officer | Auth token and role session |
-| 2 | Loan application submission | Customer | Pending loan application |
-| 3 | Mock credit score generation | Backend system | Risk score between 300 and 850 |
-| 4 | Manual underwriting decision | Credit officer | Approved or rejected outcome |
-| 5 | Audit logging and status tracking | System | Decision history and updated status |
+### Backend capabilities
+- Flask REST API with protected routes.
+- Token-based authentication using session tokens stored in the database.
+- Credit scoring logic for loan applications.
+- Audit log insertion for officer decisions.
+- AI review generation for pending loan applications.
 
 ## Tech stack
 
 | Layer | Technology |
 |------|------------|
-| Frontend | React.js, React Router, Recharts, CSS |
-| Backend | Python, Flask, Flask-CORS |
-| Database | SQLite or PostgreSQL |
-| API Testing | Postman |
-| Development Tools | VS Code, Git, npm |
+| Frontend | React, React Router, Vite, Recharts |
+| Backend | Python, Flask, Flask-CORS, psycopg2 |
+| Database | PostgreSQL |
+| Styling | Custom CSS in the React app |
 
-## System modules
-
-### Frontend pages
-- `LoginPage`
-- `CustomerDashboard`
-- `LoanApplicationForm`
-- `OfficerDashboard`
-- `UnderwritingConsole`
-- `ProtectedRoute`
-
-### Backend modules
-- Authentication handler
-- Loan application submission API
-- Customer application retrieval API
-- Officer pending queue API
-- Underwriting action API
-- Audit log insertion logic
-
-## Suggested project structure
+## Project structure
 
 ```bash
-BankLite/
+banklite/
 ├── backend/
 │   ├── app.py
-│   ├── models.py
+│   ├── config.py
+│   ├── db.py
+│   ├── services.py
+│   ├── scoring.py
 │   ├── requirements.txt
-│   └── database.db
+│   └── utils/
 ├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
 │   ├── package.json
-│   └── vite.config.js
+│   ├── vite.config.js
+│   └── src/
+│       ├── App.jsx
+│       ├── components/
+│       └── pages/
+├── database/
+│   └── schema.sql
 └── README.md
 ```
 
-## Database design
+## Current routes
 
-The application uses three main tables:
+The frontend routes in the app are:
 
-### `users`
-Stores login and role details.
-- `id`
-- `email`
-- `password_hash`
-- `full_name`
-- `role`
-- `session_token`
+- `/` – login page
+- `/customer` – customer dashboard
+- `/apply` – loan application form
+- `/officer` – officer dashboard
+- `/underwrite/:id` – underwriting console
+- `/ai-review/:loanId` – AI review screen
 
-### `loan_applications`
-Stores loan requests and decision status.
-- `id`
-- `user_id`
-- `amount`
-- `purpose`
-- `monthly_income`
-- `credit_score`
-- `status`
-- `created_at`
+## API overview
 
-### `audit_logs`
-Stores underwriting actions by officers.
-- `id`
-- `application_id`
-- `officer_id`
-- `action`
-- `comments`
-- `timestamp`
+The backend currently exposes these main endpoints:
 
-## API endpoints
-
-| Method | Endpoint | Access | Purpose |
-|-------|----------|--------|---------|
-| POST | `/api/v1/auth/login` | Public | Authenticate user and generate token |
-| POST | `/api/v1/loans/apply` | Customer | Submit a new loan application |
-| GET | `/api/v1/loans/my-applications` | Customer | View customer’s own applications |
-| GET | `/api/v1/loans/pending` | Officer | View pending loan queue |
-| PUT | `/api/v1/loans/<id>/action` | Officer | Approve or reject an application |
+| Method | Endpoint | Purpose |
+|-------|----------|---------|
+| POST | `/api/v1/auth/login` | Authenticate a user and return a token |
+| POST | `/api/v1/auth/register` | Create a new customer or officer account |
+| POST | `/api/v1/loans/apply` | Submit a new loan application |
+| GET | `/api/v1/loans/my-applications` | Fetch applications for the logged-in customer |
+| GET | `/api/v1/loans/pending` | Fetch pending applications for officers |
+| PUT | `/api/v1/loans/<id>/action` | Approve or reject a loan application |
+| POST | `/api/v1/loans/<id>/ai-review` | Generate an AI review for a loan application |
 
 ## Setup instructions
 
-### 1. Clone the repository
+### 1. Prerequisites
 
-```bash
-git clone <your-repository-url>
-cd BankLite
-```
+- Python 3.10+
+- Node.js and npm
+- PostgreSQL running locally
 
 ### 2. Backend setup
 
 ```bash
 cd backend
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+Make sure the PostgreSQL database settings in [backend/config.py](backend/config.py) match your local environment.
+
+Start the backend:
+
+```bash
 python app.py
 ```
 
-If CORS is required for local development, install and configure Flask-CORS in the Flask app.
+The API will run on `http://127.0.0.1:5000`.
 
 ### 3. Frontend setup
 
@@ -168,85 +130,44 @@ npm install
 npm run dev
 ```
 
-### 4. Production build
+The frontend will be available at `http://localhost:5173`.
+
+### 4. Create users and use the app
+
+The current frontend does not include a registration page. Create a user through the backend register endpoint, then log in from the UI.
+
+Example:
 
 ```bash
-npm run build
+curl -X POST http://127.0.0.1:5000/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"full_name":"Jane Doe","email":"jane@example.com","password":"password123","role":"customer"}'
 ```
 
-## Demo accounts
+Use the same email and password on the login screen.
 
-Use seeded test accounts for demonstration:
-
-| Role | Email | Password |
-|------|-------|----------|
-| Customer | customer1@banklite.com | cust123 |
-| Credit Officer | officer1@banklite.com | officer123 |
-
-Update these credentials based on the records inserted into the local database.
-
-## Workflow demonstration
+## Suggested workflow
 
 ### Customer journey
-1. Log in as customer.
-2. Open the customer dashboard.
-3. Submit a new loan application.
-4. View the application in the personal applications table.
-5. Observe the initial status as `pending`.
+1. Register a customer account.
+2. Log in to the customer dashboard.
+3. Open the loan application form.
+4. Submit a complete application.
+5. View the submitted application in the dashboard.
 
 ### Officer journey
-1. Log in as credit officer.
-2. Open the pending application queue.
-3. Review the risk chart and selected application details.
-4. Enter mandatory comments.
-5. Approve or reject the application.
-6. Verify that the audit log and application status are updated.
+1. Register or use an officer account with the role `credit_officer`.
+2. Log in to the officer dashboard.
+3. Review the pending loan queue.
+4. Open a loan application in the underwriting console.
+5. Enter mandatory comments and approve or reject the request.
+6. Optionally generate an AI review for the application.
 
-## UI highlights
+## Notes
 
-- Professional responsive dashboard layout.
-- Card-based interface for forms, tables, and data summaries.
-- Color-coded badges for application status and risk bands.
-- Recharts PieChart for pending loan segmentation.
-- Shared CSS system for consistent visual design across all pages.
-
-## Interview talking points
-
-This project is useful for internship and interview discussions because it demonstrates:
-
-- Full-stack integration using React and Flask.
-- Role-based access control.
-- REST API design and protected endpoints.
-- Database modeling with relational tables and foreign keys.
-- State management with React hooks.
-- Business workflow implementation in a banking domain.
-- Auditability and traceability in financial decision systems.
-- Data visualization with Recharts.
-
-## Future enhancements
-
-- JWT-based authentication instead of database-stored session tokens.
-- Proper password hashing using `werkzeug.security`.
-- Dedicated endpoint to fetch a single application by ID.
-- Advanced credit decision rules based on debt-to-income ratio.
-- Search and filter support for officer dashboards.
-- Exportable audit reports.
-- Deployment using Vercel for frontend and Render/Railway for backend.
-- Unit and integration testing.
-
-## Screenshots:
-
-- Login page
-  
-
-- Customer dashboard
-  <img width="1920" height="1017" alt="customer dashboard" src="https://github.com/user-attachments/assets/6fd483fd-190e-4721-b592-d71f5e832806" />
-
-- Loan application form
-  <img width="1920" height="1005" alt="loan application page" src="https://github.com/user-attachments/assets/412f1b9c-8d29-4830-aae9-45ed0f3ac6a4" />
-
-- Officer dashboard with risk chart
-  <img width="1920" height="1016" alt="officer dashboard" src="https://github.com/user-attachments/assets/aa7f9541-3e55-4626-b814-596c048d2c73" />
+- The backend currently expects PostgreSQL and uses the configuration file in [backend/config.py](backend/config.py).
+- The app uses stored session tokens for authentication rather than JWT.
+- The officer workflow requires comments before a decision can be submitted.
 
 - Underwriting console
   <img width="1920" height="1021" alt="underwriting console page" src="https://github.com/user-attachments/assets/3f310dce-e325-4e65-a4af-f73e0b1c8b64" />
